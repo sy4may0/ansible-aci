@@ -1,8 +1,8 @@
 ---
 # tasks file for aci.
-#- name: Import tasks of fabric configure.
-#  ansible.builtin.import_tasks:
-#    file: fabric.yml
+- name: Import tasks of fabric configure.
+  ansible.builtin.import_tasks:
+    file: fabric.yml
 
 - name: Import tasks of tenant configure.
   ansible.builtin.import_tasks:
