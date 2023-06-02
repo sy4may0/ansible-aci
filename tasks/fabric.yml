@@ -146,45 +146,6 @@
   delegate_to: localhost
   loop: "{{ aci_lacp_lagpol }}"
 
-# Add or Remove Interface policy Group for Access Port.
-- name: Add/Remove infraAccPortGrp for Access Port.
-  cisco.aci.aci_interface_policy_leaf_policy_group:
-    host: "{{ aci_apic_address }}"
-    username: "{{ aci_apic_username }}"
-    password: "{{ aci_apic_password }}"
-    validate_certs: "{{ aci_apic_validate_certs }}"
-    lag_type: "{{ item.lag_type }}"
-    policy_group: "{{ item.name }}"
-    aep: "{{ item.aep }}"
-    description: "{{ item.description }}"
-    link_level_policy: "{{ item.link_level_policy }}"
-    cdp_policy: "{{ item.cdp_policy }}"
-    lldp_policy: "{{ item.lldp_policy }}"
-    state: "{{ item.state }}"
-  delegate_to: localhost
-  when: item.lag_type == 'leaf'
-  loop: "{{ aci_infra_accportgrp }}"
-
-# Add or Remove Interface policy Group for Access Port.
-- name: Add/Remove infraAccPortGrp for PC and VPC.
-  cisco.aci.aci_interface_policy_leaf_policy_group:
-    host: "{{ aci_apic_address }}"
-    username: "{{ aci_apic_username }}"
-    password: "{{ aci_apic_password }}"
-    validate_certs: "{{ aci_apic_validate_certs }}"
-    lag_type: "{{ item.lag_type }}"
-    policy_group: "{{ item.name }}"
-    aep: "{{ item.aep }}"
-    description: "{{ item.description | default('') }}"
-    link_level_policy: "{{ item.link_level_policy }}"
-    cdp_policy: "{{ item.cdp_policy }}"
-    lldp_policy: "{{ item.lldp_policy }}"
-    port_channel_policy: "{{ item.port_channel_policy }}"
-    state: "{{ item.state }}"
-  delegate_to: localhost
-  when: item.lag_type == 'link' or item.lag_type == 'node' 
-  loop: "{{ aci_infra_accportgrp }}"
-
 # Add or Remove Attachable Access Entity Profile.
 - name: Add/Remove infraAttEntityP
   cisco.aci.aci_aep:
@@ -212,6 +173,45 @@
     state: "{{ item.state }}"
   delegate_to: localhost
   loop: "{{ aci_infra_rsdomp }}"
+
+# Add or Remove Interface policy Group for Switch Port.
+- name: Add/Remove infraAccPortGrp for Switch Port.
+  cisco.aci.aci_interface_policy_leaf_policy_group:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    lag_type: "{{ item.lag_type }}"
+    policy_group: "{{ item.name }}"
+    aep: "{{ item.aep }}"
+    description: "{{ item.description }}"
+    link_level_policy: "{{ item.link_level_policy }}"
+    cdp_policy: "{{ item.cdp_policy }}"
+    lldp_policy: "{{ item.lldp_policy }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  when: item.lag_type == 'leaf'
+  loop: "{{ aci_infra_accportgrp }}"
+
+# Add or Remove Interface policy Group for Port Channel.
+- name: Add/Remove infraAccPortGrp for PC and VPC.
+  cisco.aci.aci_interface_policy_leaf_policy_group:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    lag_type: "{{ item.lag_type }}"
+    policy_group: "{{ item.name }}"
+    aep: "{{ item.aep }}"
+    description: "{{ item.description | default('') }}"
+    link_level_policy: "{{ item.link_level_policy }}"
+    cdp_policy: "{{ item.cdp_policy }}"
+    lldp_policy: "{{ item.lldp_policy }}"
+    port_channel_policy: "{{ item.port_channel_policy }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  when: item.lag_type == 'link' or item.lag_type == 'node' 
+  loop: "{{ aci_infra_accportgrp }}"
 
 # Add or Remove Interface Profile.
 - name: Add/Remove infraAccPortP
