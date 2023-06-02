@@ -1,0 +1,86 @@
+---
+# Link Level Interface Policy Configure
+# - name: Link Level Interface Policy name.
+#   auto_negotiation: Auto negotiation(true|false). Defaults to true.
+#   speed: Link speed([100]M|[1-400]G) 
+#   link_debounce_interval: Debounce timer. Defaults to 100.
+#   forwarding_error_correction: FEC mode. Defults to inherit.
+#   state: State of Link Level Interface Policy(present|absent)
+aci_fabric_hifpol:
+  - name: LLPOL-HIRAGI-DEFAULT
+    auto_negotiation: true
+    speed: 1G
+    link_debounce_interval: 100
+    forwarding_error_correction: inherit
+    state: present
+
+# CDP Interface Policy Configure.
+# - name: CDP Interface Policy name.
+#   admin_state: Enable CDP(true|false) 
+#   state: State of CDP Interface Policy(present|absent)
+aci_cdp_ifpol:
+  - name: CDPPOL-HIRAGI
+    admin_state: true
+    state: present
+
+# LLDP Interface Policy Configure.
+# - name: LLDP Interface Policy name.
+#   receive_state: Receive LLDP state(true|false) 
+#   transmit_state: Transmit LLDP state(true|false)
+#   state: State of LLDP Interface Policy(present|absent)
+aci_lldp_ifpol:
+  - name: LLDPPOL-HIRAGI
+    receive_state: false
+    transmit_state: false
+    state: present
+
+# Port Channel Interface Policy Configure.
+# - name: Port Channel Interface Policy name.
+#   mode: LACP method.
+#   min_links: Minimum links(1-16). Defaults to 1.
+#   max_links: Maximum links(1-16). Defaults to 16.
+#   load_defer: LACP Load Defer is enabled(true|false). Defaults to false.
+#   graceful_convergence: LACP Graceful Convergence is enbled(true|false). Defaults to true. 
+#   fast_select: LACP Fast Select is enabled(true|false). Defaults to true.
+#   state: State of Port Channel Interface Policy(present|absent)
+aci_lacp_lagpol:
+  - name: LACPPOL-HIRAGI-ACTIVE
+    mode: active
+    min_links: 1
+    max_links: 16
+    load_defer: false
+    graceful_convergence: true
+    fast_select: true
+    state: present
+
+# Interface Policy Group Configure.
+# - name: Interface Policy Group name.
+#   lag_type: Lag type. (leaf|link|node)
+#             leaf: Access port, link: PC port, node: VPC port.
+#   description: Description. Defaults to ''.
+#   link_level_policy: Link Level Interface Policy.
+#   cdp_policy: CDP Interface Policy.
+#   lldp_policy: LLDP Interface Policy.
+#   port_channel_policy: Port Channel Interface Policy.
+#   state: State of Interface Policy Group(present|absent).
+aci_infra_accportgrp:
+  - name: IPG-HIRAGI-ACCESS
+    lag_type: leaf
+    aep: AEP-KAGAMI
+    description: 'Access Port'
+    link_level_policy: LLPOL-HIRAGI-DEFAULT
+    cdp_policy: CDPPOL-HIRAGI
+    lldp_policy: LLDPPOL-HIRAGI
+    state: present
+  - name: APG-HIRAGI-VPC
+    lag_type: node
+    aep: AEP-KAGAMI
+    description: 'VPC Port'
+    link_level_policy: LLPOL-HIRAGI-DEFAULT
+    cdp_policy: CDPPOL-HIRAGI
+    lldp_policy: LLDPPOL-HIRAGI
+    port_channel_policy: LACPPOL-HIRAGI-ACTIVE
+    state: present
+ 
+ 
+

@@ -1,0 +1,36 @@
+---
+# VLAN Pool Configure.
+# - name: VLAN Pool name. 
+#   pool_allocation_mode: VLAN allocation mode. (static|dynamic) Defaults to 'static'.
+#   description: Description. Defaults to ''.
+#   state: State of VLAN Pool(present|absent)
+aci_fvns_vlaninstp:
+  - name: VP-HIRAGI
+    pool_allocation_mode: static
+    description: HIRAGI
+    state: present
+
+# VLAN Pool Encap Block Configure.
+# - pool: Parent VLAN Pool name.
+#   pool_allocation_mode: Parent VLAN Pool allocation mode. 
+#   allocation_mode: VLAN Encap Block allocation mode. (static|inherit|dynamic) Defaults to 'inherit'.
+#   block_start: Start of the VLAN ID Block.
+#   block_end: End of the VLAN ID Block.
+#   state: State of Encap Block(present|absent)
+aci_fvns_encapblk:
+  - pool: VP-HIRAGI
+    pool_allocation_mode: static
+    block_start: 3791
+    block_end: 3793
+    state: present
+  - pool: VP-HIRAGI
+    pool_allocation_mode: static
+    block_start: 3981
+    block_end: 3983
+    state: present
+  - pool: VP-HIRAGI
+    pool_allocation_mode: static
+    block_start: 3991
+    block_end: 3993
+    state: present
+

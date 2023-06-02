@@ -1,0 +1,76 @@
+---
+# Interface Profile Configure.
+# - name: Interface Profile name.
+#   description: Description. Defaults to ''.
+#   type: Profile type(fex|leaf). Defaults to 'leaf'.
+#   state: State of the Interface Profile(present|absent).
+aci_infra_accportp:
+  - name: IFP-HIRAGI
+    description: hiragi
+    type: leaf
+    state: present
+
+# Interface Selector Configure.
+# - type: Selector type(leaf|fex).
+#   interface_type: Interface Type.
+#                  (breakout|fex|port_channel|switch_port|vpc)
+#                  (fex_port_channel|fex_vpc|fex_profile)
+#   name: Access port selector name.
+#   interface_profile: Interface Profile.
+#   policy_group: Policy Group.
+#   state: State of Interface Selector(present|absent)
+#
+# If type=fex, Add below options.
+#   fex_profile: FEX Profile. 
+#   fex_id: FEX id.
+aci_infra_hports:
+  - type: leaf
+    interface_type: switch_port
+    name: KAGAMI_SWP_1
+    interface_profile: IFP-HIRAGI
+    policy_group: IPG-HIRAGI-ACCESS
+    state: present
+  - type: leaf
+    interface_type: vpc
+    name: KAGAMI_VPC_1
+    interface_profile: IFP-HIRAGI
+    policy_group: IPG-HIRAGI-VPC
+    state: present
+
+# Interface Selector Port Blk Configure.
+# - type: Interface Profile Type(leaf|fex)
+#   name: Port Blk name.
+#   access_port_selector: Interface Selector
+#   from_card: Card number of range start.
+#   to_card: Card number of range end. 
+#   from_port: Port number of range start. 
+#   to_port: Port number of range end 
+#   state: State of Port Blk(present|absent)
+aci_infra_portblk:
+  - type: leaf
+    name: KAGAMI_SWP_1_BLK1
+    interface_profile: IFP-HIRAGI
+    access_port_selector: KAGAMI_SWP_1
+    from_card: 1
+    to_card: 1
+    from_port: 13
+    to_port: 15
+    state: present
+  - type: leaf
+    name: KAGAMI_VPC_1_BLK1
+    interface_profile: IFP-HIRAGI
+    access_port_selector: KAGAMI_VPC_1
+    from_card: 1
+    to_card: 1
+    from_port: 16
+    to_port: 16
+    state: present
+  - type: leaf
+    name: KAGAMI_VPC_1_BLK2
+    interface_profile: IFP-HIRAGI
+    access_port_selector: KAGAMI_VPC_1
+    from_card: 2
+    to_card: 2
+    from_port: 16
+    to_port: 16
+    state: present

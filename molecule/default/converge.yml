@@ -1,0 +1,7 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include sy4may0.aci"
+      include_role:
+        name: "sy4may0.aci"

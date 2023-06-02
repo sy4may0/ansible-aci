@@ -1,0 +1,21 @@
+# Attachable Access Entity Profile configure.
+# - name: AEP name.
+#   description: Description. Defaults to ''. 
+#   infra_vlan: Infrastructure VLAN enabled(true|false). Defaults to false.
+#   state: State of AEP(present|absent)
+aci_infra_attentityp:
+  - name: AEP-KAGAMI
+    description: 'kgm'
+    infra_vlan: false
+    state: present
+
+# AEP to Domain binding configure.
+# - aep: AEP name.
+#   domain: Domain name.
+#   domain_type: Domain type(fc|l2dom|l3dom|phys|vmm)
+#   state: State of Binding(present|absent)
+aci_infra_rsdomp:
+  - aep: AEP-KAGAMI
+    domain: PD-KAGAMI
+    domain_type: phys
+    state: present

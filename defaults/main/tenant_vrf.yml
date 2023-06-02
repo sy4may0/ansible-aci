@@ -1,0 +1,15 @@
+---
+# VRF configure.
+# - name: VRF name.
+#   tenant: Tenant to which VRF belongs.
+#   description: VRF description. Defaults to ''.
+#   policy_control_preference: Use contract in VRF(enforced|unenforced). Defaults to 'enforced'.
+#   policy_control_direction: Direction of policy control(ingress|egress). Defaults to 'ingress'.
+#   state: State of the VRF(present|absent)
+aci_fv_ctx:
+  - name: KANATA-VRF
+    tenant: KANATA
+    description: IK
+    policy_control_preference: enforced
+    policy_control_direction: ingress
+    state: present

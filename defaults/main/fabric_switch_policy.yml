@@ -1,0 +1,9 @@
+---
+# Switch Policy Group Configure.
+# - name: Switch Policy Group name
+#   monitoring_policy: Monitoring Policy. Defaults to 'default'
+#   inventory_policy: Inventory Policy. Defaults to 'default'
+aci_fabric_lenodepgrp:
+  - name: SPG-HIRAGI
+    monitoring_policy: default
+    inventory_policy: default

@@ -1,0 +1,56 @@
+---
+# Static Bindings to EPG Configure.
+# - ap: Apprication Profile.
+#   epg: APplication EPG.
+#   tenant: Tenant.
+#   encap_id: Encap VLAN ID.
+#   interface_mode: Interface Mode(native|untagged|trunk).
+#   interface_type: Interface Type.
+#                   (fex|port_channel|switch_port|vpc|fex_port_channel|fex_vpc)
+#   deploy_immediacy: Deployment Immediacy(immediate|lazy). Defaults to 'lazy'.
+#   description: Description. Defaults to ''.
+#   interface_configs: <Interface config list>
+#     - interface: Interface number like (1/1)
+#       leafs: Leaf ID number. When type is vpc, Value is list of Leaf IDs.
+#       pod: Pod number.
+#     # And you can override below options.
+#       encap_id: 
+#       interface_mode: 
+#       interface_type: 
+#       deploy_immediacy: 
+#       description: 
+#   state: State of Static Bindings. 
+aci_fv_rspathatt:
+  - ap: KONATA
+    epg: KONATA-WEB
+    tenant: KANATA
+    encap_id: 3791
+    interface_mode: untagged
+    interface_type: switch_port
+    deploy_immediacy: immediate
+    description: '3791 Access'
+    interface_configs:
+      - interface: 1/13
+        leafs: 101
+        pod: 1
+      - interface: 1/14
+        leafs: 101
+        pod: 1
+      - interface: 1/15
+        leafs: 101
+        pod: 1
+    state: present
+  - ap: KONATA
+    epg: KONATA-APP
+    tenant: KANATA
+    encap_id: 3792
+    interface_mode: trunk
+    interface_type: vpc
+    deploy_immediacy: immediate
+    description: '3792 VPC trunk'
+    interface_configs:
+      - interface: 1/16
+        leafs: [101,102]
+        pod: 1
+    state: present
+ 

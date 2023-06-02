@@ -1,0 +1,9 @@
+---
+# Tenant configure.
+# - name: Tenant name.
+#   description: Tenant description. Defaults to ''.
+#   state: State of the Tenant(present|absent)
+aci_fv_tenant:
+  - name: KANATA
+    description: IK
+    state: present

@@ -1,0 +1,33 @@
+---
+# Switch Profile Configure.
+# - name: Switch Profile name. 
+#   state: State of Switch Profile(present|absent)
+aci_infra_nodep:
+  - name: SP-HIRAGI
+    state: present
+
+# Associating to Interface Profile Configure.
+# - switch_profile: Switch Profile name.
+#   interface_profile: Interface Profile name.
+#   state: State of Associating(present|absent).
+aci_infra_rsaccportp:
+  - switch_profile: SP-HIRAGI
+    interface_profile: IFP_HIRAGI
+    state: present 
+
+# Leaf Selector Configure.
+# - name: Leaf Selector name.
+#   leaf_profile: Leaf Profile.
+#   policy_group: Switch Policy Group.
+#   leaf_node_blk_name: Node Blk name.
+#   from: Leaf id of range start.
+#   to: Leaf id of range end.
+#   state: State of Leaf Selector(present|absent)
+aci_infra_leafs:
+  - name: SP-HIRAGI-LEAFS
+    leaf_profile: SP-HIRAGI
+    policy_group: SPG-HIRAGI
+    leaf_node_blk_name: SP-HIRAGI-LEAFS-BLK1
+    from: 101
+    to: 102
+    state: present

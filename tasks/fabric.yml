@@ -1,0 +1,339 @@
+---
+# tasks file for aci fabric configure.
+
+# Add or Remove VLAN Pool.
+- name: Add/Remove fvnsVlanInstP.
+  cisco.aci.aci_vlan_pool:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    pool: "{{ item.name }}"
+    pool_allocation_mode: "{{ item.pool_allocation_mode | default('static') }}"
+    description: "{{ item.description | default('') }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_fvns_vlaninstp }}"
+
+# Add or Remove VLAN Pool Encap Block.
+- name: Add/Remove fvnsEncapBlk
+  cisco.aci.aci_vlan_pool_encap_block:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    pool: "{{ item.pool }}"
+    pool_allocation_mode: "{{ item.pool_allocation_mode }}"
+    allocation_mode: "{{ item.allocation_mode | default('inherit') }}"
+    block_start: "{{ item.block_start }}"
+    block_end: "{{ item.block_end }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_fvns_encapblk }}"
+
+# Add or Remove Physical Domain.
+- name: Add/Remove physDomP
+  cisco.aci.aci_domain:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    domain: "{{ item.name }}"
+    domain_type: phys
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_phys_domp }}"
+
+# Add or Remove External Bridged Domain.
+- name: Add/Remove l2extDomP
+  cisco.aci.aci_domain:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    domain: "{{ item.name }}"
+    domain_type: l2dom
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_l2ext_domp }}"
+
+# Add or Remove L3 Domain.
+- name: Add/Remove l3extDomP
+  cisco.aci.aci_domain:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    domain: "{{ item.name }}"
+    domain_type: l3dom
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_l3ext_domp }}"
+
+# Associate or Remove Association VLAN Pool to Domain.
+- name: Add/Remove infraRsVlanNs
+  cisco.aci.aci_domain_to_vlan_pool:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    domain: "{{ item.domain }}"
+    domain_type: "{{ item.domain_type }}"
+    pool: "{{ item.pool }}"
+    pool_allocation_mode: "{{ item.pool_allocation_mode }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_infra_rsvlanns }}"
+
+# Add or Remove Link Level Interface Policy.
+- name: Add/Remove fabricHIfPol
+  cisco.aci.aci_interface_policy_link_level:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    link_level_policy: "{{ item.name }}"
+    auto_negotiation: "{{ item.auto_negotiation | default(true) }}"
+    speed: "{{ item.speed | default('inherit') }}"
+    link_debounce_interval: "{{ item.link_debounce_interval | default(100) }}"
+    forwarding_error_correction: "{{ item.forwarding_error_correction | default('inherit') }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_fabric_hifpol }}"
+
+# Add or Remove CDP Interface Policy.
+- name: Add/Remove cdpIfPol
+  cisco.aci.aci_interface_policy_cdp:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    name: "{{ item.name }}"
+    admin_state: "{{ item.admin_state | default(false) }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_cdp_ifpol }}"
+
+# Add or Remove LLDP Interface Policy.
+- name: Add/Remove lldpIfPol
+  cisco.aci.aci_interface_policy_lldp:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    name: "{{ item.name }}"
+    receive_state: "{{ item.receive_state | default(false) }}"
+    transmit_state: "{{ item.transmit_state | default(false) }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_lldp_ifpol }}"
+
+# Add or Remove Port Channel Interface Policy.
+- name: Add/Remove lacpLagPol
+  cisco.aci.aci_interface_policy_port_channel:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    name: "{{ item.name }}"
+    mode: "{{ item.mode }}"
+    min_links: "{{ item.min_links }}"
+    max_links: "{{ item.max_links }}"
+    load_defer: "{{ item.load_defer }}"
+    graceful_convergence: "{{ item.graceful_convergence }}"
+    fast_select: "{{ item.fast_select }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_lacp_lagpol }}"
+
+# Add or Remove Interface policy Group for Access Port.
+- name: Add/Remove infraAccPortGrp for Access Port.
+  cisco.aci.aci_interface_policy_leaf_policy_group:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    lag_type: "{{ item.lag_type }}"
+    policy_group: "{{ item.name }}"
+    aep: "{{ item.aep }}"
+    description: "{{ item.description }}"
+    link_level_policy: "{{ item.link_level_policy }}"
+    cdp_policy: "{{ item.cdp_policy }}"
+    lldp_policy: "{{ item.lldp_policy }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  when: item.lag_type == 'leaf'
+  loop: "{{ aci_infra_accportgrp }}"
+
+# Add or Remove Interface policy Group for Access Port.
+- name: Add/Remove infraAccPortGrp for PC and VPC.
+  cisco.aci.aci_interface_policy_leaf_policy_group:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    lag_type: "{{ item.lag_type }}"
+    policy_group: "{{ item.name }}"
+    aep: "{{ item.aep }}"
+    description: "{{ item.description | default('') }}"
+    link_level_policy: "{{ item.link_level_policy }}"
+    cdp_policy: "{{ item.cdp_policy }}"
+    lldp_policy: "{{ item.lldp_policy }}"
+    port_channel_policy: "{{ item.port_channel_policy }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  when: item.lag_type == 'link' or item.lag_type == 'node' 
+  loop: "{{ aci_infra_accportgrp }}"
+
+# Add or Remove Attachable Access Entity Profile.
+- name: Add/Remove infraAttEntityP
+  cisco.aci.aci_aep:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    aep: "{{ item.name }}"
+    description: "{{ item.description | default('')}}"
+    infra_vlan: "{{ item.infra_vlan | default(false)}}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_infra_attentityp }}"
+
+# Add or Remove Bindings AEP to Domains.
+- name: Add/Remove infraRsDomP
+  cisco.aci.aci_aep_to_domain:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    aep: "{{ item.aep }}"
+    domain: "{{ item.domain }}"
+    domain_type: "{{ item.domain_type }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_infra_rsdomp }}"
+
+# Add or Remove Interface Profile.
+- name: Add/Remove infraAccPortP
+  cisco.aci.aci_interface_policy_leaf_profile:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    interface_profile: "{{ item.name }}"
+    description: "{{ item.description | default('') }}"
+    type: "{{ item.type | default('leaf') }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_infra_accportp }}"
+
+# Add or Remove Interface Selector associated with Interface Profile.
+- name: Add/Remove infraHPorts associated with Interface Profile
+  cisco.aci.aci_access_port_to_interface_policy_leaf_profile:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    type: "{{ item.type }}"
+    interface_type: "{{ item.interface_type | default('switch_port') }}"
+    access_port_selector: "{{ item.name }}"
+    interface_profile: "{{ item.interface_profile }}"
+    policy_group: "{{ item.policy_group }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  when: item.type == 'leaf'
+  loop: "{{ aci_infra_hports }}"
+
+# Add or Remove Interface Selector associated with Fex Profile.
+- name: Add/Remove infraHPorts associated with FEX Profile
+  cisco.aci.aci_access_port_to_interface_policy_leaf_profile:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    type: "{{ item.type }}"
+    interface_type: "{{ item.interface_type | default('switch_port') }}"
+    access_port_selector: "{{ item.name }}"
+    leaf_interface_profile: "{{ item.interface_profile }}"
+    fex_profile: "{{ item.fex_profile }}"
+    policy_group: "{{ item.policy_group }}"
+    fex_id: "{{ item.fex_id }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  when: item.type == 'fex'
+  loop: "{{ aci_infra_hports }}"
+
+# Add or Remove Interface Selector Port Blk.
+- name: Add/Remove infraPortBlk associated with Interface Selector
+  cisco.aci.aci_access_port_block_to_access_port:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    type: "{{ item.type }}"
+    port_blk: "{{ item.name }}"
+    access_port_selector: "{{ item.access_port_selector }}"
+    interface_profile: "{{ item.interface_profile }}"
+    from_card: "{{ item.from_card }}"
+    to_card: "{{ item.to_card }}"
+    from_port: "{{ item.from_port }}"
+    to_port: "{{ item.to_port }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_infra_portblk }}"
+
+# Add or Remove LEAF Switch Policy Group.
+- name: Add/Remove fabricLeNodePGrp 
+  cisco.aci.aci_fabric_switch_policy_group:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    name: "{{ item.name }}"
+    switch_type: leaf
+    monitoring_policy: "{{ item.monitoring_policy | default('default') }}"
+    inventory_policy: "{{ item.inventory_policy | default('default') }}"
+  delegate_to: localhost
+  loop: "{{ aci_fabric_lenodepgrp }}"
+
+# Add or Remove Switch Proile.
+- name: Add/Remove infraNodeP
+  cisco.aci.aci_switch_policy_leaf_profile:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    leaf_profile: "{{ item.name }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_infra_nodep }}"
+
+# Associating or Remove Association the Switch Profile to Interface Profile.
+- name: Add/Remove infraRsAccPortP
+  cisco.aci.aci_interface_selector_to_switch_policy_leaf_profile:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    leaf_profile: "{{ item.switch_profile }}"
+    interface_selector: "{{ item.interface_profile }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_infra_rsaccportp }}"
+
+# Add Leaf Selector to Switch Profile.
+- name: Add/Remove infraLeafS
+  cisco.aci.aci_switch_leaf_selector:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    leaf: "{{ item.name }}"
+    leaf_profile: "{{ item.leaf_profile }}"
+    policy_group: "{{ item.policy_group }}"
+    leaf_node_blk: "{{ item.leaf_node_blk_name }}"
+    from: "{{ item.from }}"
+    to: "{{ item.to }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_infra_leafs }}"

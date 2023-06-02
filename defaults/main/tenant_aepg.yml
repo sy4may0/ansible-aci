@@ -1,0 +1,47 @@
+---
+# Application Profile Configure.
+# - name: AP name.
+#   tenant: Tenant to which AP belongs.
+#   description: Description. Defaults to ''.
+#   monitoring_policy: Monitoring Policy. Defaults to 'default'.
+#   state: State of the AP(present|absent)
+aci_fv_ap:
+  - name: KONATA
+    tenant: KANATA
+    description: IK
+    monitoring_policy: default
+    state: present
+
+# Application EPG Configure.
+# - name: AEPG name. 
+#   ap: AP to which AEPG belongs.
+#   bd: BD to which AEPG is associated 
+#   tenant: Tenant to which AEPG is associated.
+#   description: Description. Defaults to ''.
+#   monitoring_policy: Monitoring Policy. Defaults to 'default'.
+#   preffered_group: (true|false)Allows communication with other EPGs without contracts. Defaults to false. 
+#   intra_epg_isolation: (enforced|unenforced)Isolate hosts in AEPG. Defaults to unenforced.
+#   priority: (level[1-6]|unspecified) QoS class. Defaults to 'level3'.
+#   state: State of AEPG(present|absent)
+aci_fv_aepg:
+  - name: KONATA-WEB
+    ap: KONATA
+    bd: KANATA-BD
+    tenant: KANATA
+    description: kona-web
+    monitoring_policy: default
+    preffered_group: false
+    intra_epg_isolation: 'enforced'
+    state: present
+  - name: KONATA-APP
+    ap: KONATA
+    bd: KANATA-BD
+    tenant: KANATA
+    description: kona-app
+    monitoring_policy: default
+    preffered_group: true
+    intra_epg_isolation: 'unenforced'
+    priority: unspecified
+    state: present
+
+

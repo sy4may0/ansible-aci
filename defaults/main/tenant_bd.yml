@@ -1,0 +1,47 @@
+# Bridge Domain configure.
+# - name: Bridge Domain name.
+#   vrf: VRF to which BD belongs.
+#   tenant: Tenant to which BD belongs.
+#   bd_type: BD type(ethernet|fc). Defaults to 'ethernet'.
+#   mac_address: Mac address of BD. Defaults to '00:22:BD:F8:19:FF'.
+#   arp_flooding: Is flood ARP traffic(true|false). Defaults to false.
+#   l2_unknown_unicast: What forwarding method to unknown l2 destination(proxy|flood). Defaults to 'proxy'.
+#   enable_routing: IP forwarding should be allowed(true|false). Defaults to true.
+#   ip_learning: BD should learn Endpoint IPs(true|false). Defaults to true.
+#   state: State of the BD(present|absent)
+aci_fv_bd:
+  - name: KANATA-BD
+    vrf: KANATA-VRF
+    tenant: KANATA
+    bd_type: 'ethernet'
+    mac_address: '00:22:BD:F8:19:AF'
+    arp_flooding: true
+    l2_unknown_unicast: 'proxy'
+    enable_routing: false
+    ip_learning: false
+    state: present
+
+# Bridge Domain Subnet configure.
+# - name: Subnet name.
+#   bd: BD to which Subnet belongs 
+#   tenant: Tenant to which BD belongs
+#   gateway: Gateway address of subnet.
+#   mask: Subnet mask.
+#   description: Description. Defaults to ''
+#   scope: (private|public|[private, shared]|[public, shared]) 
+#           private: Only allows communication with hosts in the same VRF
+#           public: Allows Subnet to be advertised outside of ACI and communication other VRFs.
+#           shared: Allows communication with hosts in the same or shared VRFs
+#   state: State of the Subnet(present|absent)
+#   route_profile_l3_out: Associated Route profile of l3out. Defaults to Undefined.
+#   route_profile: Associated Route profile. Defaults to Undefined.
+aci_fv_subnet:
+  - name: SOUJIROU
+    bd: KANATA-BD
+    tenant: KANATA
+    gateway: 192.168.19.1
+    mask: 24
+    description: soujirou
+    scope: [private, shared]
+    state: present
+    

@@ -1,0 +1,35 @@
+---
+# Physical Domain Configure.
+# - name: Physical Domain name. 
+#   state: State of Physical Domain(present|absent)
+aci_phys_domp:
+  - name: PD-KAGAMI
+    state: present
+
+# L3 Domain Configure.
+# - name: L3 Domain name. 
+#   state: State of L3 Domain(present|absent)
+aci_l3ext_domp:
+  - name: L3D-TSUKASA
+    state: present
+
+# External Bridged Domain Configure.
+# - name: External Bridged Domain name. 
+#   state: State of External Bridged Domain(present|absent)
+aci_l2ext_domp:
+  - name: L2D-TSUKASA
+    state: present
+
+# Association VLAN Pool to Domain Configure.
+# - domain: Domain.
+#   domain_type: Domain type(phys|l3dom|l2dom|fc|vmm)
+#   pool: VLAN Pool.
+#   pool_allocation_mode: VLAN Pool allocation mode(static|dynamic)
+#   state: State of Association(present|absent)
+aci_infra_rsvlanns:
+  - domain: PD-KAGAMI
+    domain_type: phys
+    pool: VP-HIRAGI
+    pool_allocation_mode: static
+    state: present
+

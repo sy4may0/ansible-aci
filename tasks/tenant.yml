@@ -1,0 +1,125 @@
+---
+# tasks file for aci tenant configure.
+
+# Add or Remove Tenants.
+- name: Add/Remove fvTenant.
+  cisco.aci.aci_tenant:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    tenant: "{{ item.name }}"
+    description: "{{ item.description | default('') }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_fv_tenant }}"
+
+# Add or Remove VRF.
+- name: Add/Remove fvCtx
+  cisco.aci.aci_vrf:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    vrf: "{{ item.name }}"
+    tenant: "{{ item.tenant }}"
+    descr: "{{ item.description | default('') }}"
+    policy_control_preference: "{{ item.policy_control_preference | default('enforced') }}"
+    policy_control_direction: "{{ item.policy_control_direction | default('ingress') }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_fv_ctx }}"
+
+# Add or Remove Bridge Domain.
+- name: Add/Remove fvBD
+  cisco.aci.aci_bd:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    bd: "{{ item.name }}"
+    vrf: "{{ item.vrf }}"
+    tenant: "{{ item.tenant }}"
+    bd_type: "{{ item.type | default('ethernet') }}"
+    mac_address: "{{ item.mac_address | default('00:22:BD:F8:19:FF') }}"
+    arp_flooding: "{{ item.arp_flooding | default(false) }}"
+    l2_unknown_unicast: "{{ item.l2_unknown_unicast | default('proxy') }}"
+    enable_routing: "{{ item.enable_routing | default(true) }}"
+    ip_learning: "{{ item.ip_learning | default(true)}}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_fv_bd }}"
+
+# Add or Remove BD Subnets.
+- name: Add/Remove fvSubnet
+  cisco.aci.aci_bd_subnet:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    subnet_name: "{{ item.name }}"
+    bd: "{{ item.bd }}"
+    tenant: "{{ item.tenant }}"
+    gateway: "{{ item.gateway }}"
+    mask: "{{ item.mask }}"
+    description: "{{ item.description | default('') }}"
+    scope: "{{ item.scope | default('private') }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  when: item.route_profile_l3_out is undefined
+  loop: "{{ aci_fv_subnet }}"
+
+# Add or Remove Application Profile.
+- name: Add/Remove fvAP.
+  cisco.aci.aci_ap:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    ap: "{{ item.name }}"
+    tenant: "{{ item.tenant }}"
+    description: "{{ item.description | default('') }}"
+    monitoring_policy: "{{ item.monitoring_policy | default('default') }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_fv_ap }}"
+
+# Add or Remove Application EPG.
+- name: Add/Remove fvAEPg.
+  cisco.aci.aci_epg:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    epg: "{{ item.name }}"
+    ap: "{{ item.ap }}"
+    bd: "{{ item.bd }}"
+    tenant: "{{ item.tenant }}"
+    description: "{{ item.description | default('') }}"
+    monitoring_policy: "{{ item.monitoring_policy | default('default') }}"
+    preferred_group: "{{ item.preferred_group | default(false) }}"
+    intra_epg_isolation: "{{ item.intra_epg_isolation | default('unenforced') }}"
+    priority: "{{ item.priority | default('level3') }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_fv_aepg }}"
+
+# Add or Remove Static Bindings to EPG.
+- name: Add/Remove fvRsPathAtt
+  cisco.aci.aci_bulk_static_binding_to_epg:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    epg: "{{ item.epg }}"
+    ap: "{{ item.ap }}"
+    tenant: "{{ item.tenant }}"
+    encap_id: "{{ item.encap_id }}"
+    interface_mode: "{{ item.interface_mode }}"
+    interface_type: "{{ item.interface_type}}"
+    deploy_immediacy: "{{ item.deploy_immediacy | default(lazy) }}"
+    description: "{{ item.description | default('') }}"
+    interface_configs: "{{ item.interface_configs }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_fv_rspathatt }}"
