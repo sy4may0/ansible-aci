@@ -1,0 +1,153 @@
+---
+# L3Out configure.
+aci_l3ext_out:
+  - name: KANATA-L3OUT
+    tenant: KANATA
+    vrf: KANATA-VRF
+    domain: L3D-TSUKASA
+    description: 'L3out'
+    l3protocol: static
+    state: present
+
+# Logical Node Profile configure.
+aci_l3ext_lnodep:
+  - name: KANATA-L3OUT-LNP
+    l3out: KANATA-L3OUT
+    tenant: KANATA
+    state: present
+
+# Logical Node configure.
+aci_l3ext_rsnodel3outatt:
+  - tenant: KANATA
+    l3out: KANATA-L3OUT
+    node_profile: KANATA-L3OUT-LNP
+    pod_id: 1
+    node_id: 101
+    router_id: 10.0.200.201
+    state: present
+
+# Logical Interface Profile configure.
+aci_l3ext_lifp:
+  - name: KANATA-L3OUT-LIFP
+    l3out: KANATA-L3OUT
+    tenant: KANATA
+    node_profile: KANATA-L3OUT-LNP
+    state: present
+  - name: KANATA-L3OUT-LIFP-VPC
+    l3out: KANATA-L3OUT
+    tenant: KANATA
+    node_profile: KANATA-L3OUT-LNP
+    state: present
+ 
+aci_l3ext_rspathl3outatt:
+  - tenant: KANATA
+    l3out: KANATA-L3OUT
+    node_profile: KANATA-L3OUT-LNP
+    interface_profile: KANATA-L3OUT-LIFP
+    pod_id: 1
+    node_id: 101
+    path_ep: eth1/12
+    address: 10.0.101.1/30
+    interface_type: l3-port
+    encap: vlan-500
+    state: present
+  - tenant: KANATA
+    l3out: KANATA-L3OUT
+    node_profile: KANATA-L3OUT-LNP
+    interface_profile: KANATA-L3OUT-LIFP
+    pod_id: 1
+    node_id: 101-102
+    path_ep: APG-HIRAGI-VPC-L3OUT
+    interface_type: ext-svi
+    encap: vlan-800
+    state: present
+
+
+aci_l3ext_rspathl3outatt_vpcport:
+  - tenant: KANATA
+    l3out: KANATA-L3OUT
+    node_profile: KANATA-L3OUT-LNP
+    interface_profile: KANATA-L3OUT-LIFP-VPC
+    pod_id: 1
+    node_id: 101-102
+    path_ep: APG-HIRAGI-VPC-L3OUT
+    side: A
+    address: 10.0.101.101/29
+    state: present
+    priority: primary
+  - tenant: KANATA
+    l3out: KANATA-L3OUT
+    node_profile: KANATA-L3OUT-LNP
+    interface_profile: KANATA-L3OUT-LIFP-VPC
+    pod_id: 1
+    node_id: 101-102
+    path_ep: APG-HIRAGI-VPC-L3OUT
+    side: A
+    address: 10.0.101.102/29
+    state: present
+    priority: secondary
+  - tenant: KANATA
+    l3out: KANATA-L3OUT
+    node_profile: KANATA-L3OUT-LNP
+    interface_profile: KANATA-L3OUT-LIFP-VPC
+    pod_id: 1
+    node_id: 101-102
+    path_ep: APG-HIRAGI-VPC-L3OUT
+    side: B
+    address: 10.0.101.103/29
+    state: present
+    priority: primary
+  - tenant: KANATA
+    l3out: KANATA-L3OUT
+    node_profile: KANATA-L3OUT-LNP
+    interface_profile: KANATA-L3OUT-LIFP-VPC
+    pod_id: 1
+    node_id: 101-102
+    path_ep: APG-HIRAGI-VPC-L3OUT
+    side: B
+    address: 10.0.101.104/29
+    state: present
+    priority: secondary
+
+aci_l3ext_iproutep:
+  - tenant: KANATA
+    l3out: KANATA-L3OUT
+    node_profile: KANATA-L3OUT-LNP
+    node_id: 101
+    pod_id: 1
+    prefix: 10.1.0.0/16
+    state: present
+
+aci_ip_nexthopp:
+  - tenant: KANATA
+    l3out: KANATA-L3OUT
+    node_profile: KANATA-L3OUT-LNP
+    pod_id: 1
+    node_id: 101
+    prefix: 10.1.0.0/16
+    nexthop: 10.0.101.110
+    state: present
+
+aci_l3ext_instp:
+  - tenant: KANATA
+    l3out: KANATA-L3OUT
+    name: KANATA-EXT-EPG
+    description: kanaextepg
+    state: present
+
+aci_l3ext_subnet:
+  - tenant: KANATA
+    l3out: KANATA-L3OUT
+    extepg: KANATA-EXT-EPG
+    description: kanaextepgsubnet
+    network: 0.0.0.0/0
+    scope:
+      - import-security
+    aggrigate: []
+    state: present
+
+aci_fv_rsbdtoout:
+  - tenant: KANATA
+    bd: KANATA-BD
+    l3out: KANATA-L3OUT
+    state: present

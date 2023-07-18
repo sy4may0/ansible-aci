@@ -1,0 +1,248 @@
+---
+# Add or Remove L3Out
+- name: Add/Remove l3extOut
+  cisco.aci.aci_l3out:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    tenant: "{{ item.tenant }}"
+    name: "{{ item.name }}"
+    description: "{{ item.description | default('') }}"
+    domain: "{{ item.domain }}"
+    vrf: "{{ item.vrf }}"
+    l3protocol: "{{ item.l3protocol }}"
+    route_control: "{{ item.route_control | default(['export']) }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost 
+  loop: "{{ aci_l3ext_out }}"
+  tags: 
+    - l3extOut
+
+# Add or Remove Logical Node Profile.
+- name: Add/Remove l3extLNodeP
+  cisco.aci.aci_l3out_logical_node_profile:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    node_profile: "{{ item.name }}"
+    description: "{{ item.description | default('') }}"
+    l3out: "{{ item.l3out }}"
+    tenant: "{{ item.tenant }}"
+    dscp: "{{ item.dscp | default('unspecified') }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_l3ext_lnodep }}"
+  tags:
+    - l3extLNodeP
+
+# Add or Remove Logical Node.
+- name: Add/Remove l3extRsNodeL3OutAtt
+  cisco.aci.aci_l3out_logical_node:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    tenant: "{{ item.tenant }}"
+    l3out: "{{ item.l3out }}"
+    node_profile: "{{ item.node_profile }}"
+    pod_id: "{{ item.pod_id }}"
+    node_id: "{{ item.node_id }}"
+    router_id: "{{ item.router_id }}"
+    router_id_as_loopback: "{{ item.router_id_as_loopback | default(true) }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_l3ext_rsnodel3outatt }}"
+  tags:
+    - l3extRsNodeL3OutAtt
+
+# Add or Remove Logical Interface Profile. 
+- name: Add/Remove l3extLIfP
+  cisco.aci.aci_l3out_logical_interface_profile:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    tenant: "{{ item.tenant }}"
+    l3out: "{{ item.l3out }}"
+    node_profile: "{{ item.node_profile }}"
+    interface_profile: "{{ item.name }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_l3ext_lifp }}"
+  tags:
+    - l3extLIfP
+
+# Add or Remove Logical Interface.
+- name: Add/Remove l3extRsPathL3OutAtt (l3-port)
+  cisco.aci.aci_l3out_interface:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    tenant: "{{ item.tenant }}"
+    l3out: "{{ item.l3out }}"
+    node_profile: "{{ item.node_profile }}"
+    interface_profile: "{{ item.interface_profile }}"
+    pod_id: "{{ item.pod_id }}"
+    node_id: "{{ item.node_id }}"
+    path_ep: "{{ item.path_ep}}"
+    encap: "{{ item.encap }}"
+    interface_type: "{{ item.interface_type }}"
+    address: "{{ item.address }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_l3ext_rspathl3outatt_l3port }}"
+  when: item.interface_type != 'ext-svi'
+  tags:
+    - l3extRsPathL3OutAtt
+- name: Add/Remove l3extRsPathL3OutAtt (ext-svi)
+  cisco.aci.aci_l3out_interface:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    tenant: "{{ item.tenant }}"
+    l3out: "{{ item.l3out }}"
+    node_profile: "{{ item.node_profile }}"
+    interface_profile: "{{ item.interface_profile }}"
+    pod_id: "{{ item.pod_id }}"
+    node_id: "{{ item.node_id }}"
+    path_ep: "{{ item.path_ep}}"
+    encap: "{{ item.encap }}"
+    interface_type: "{{ item.interface_type }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_l3ext_rspathl3outatt_l3port }}"
+  when: item.interface_type == 'ext-svi'
+  tags:
+    - l3extRsPathL3OutAtt
+  
+# Add or Remove Logical Interface.
+- name: Add/Remove l3extMember (vpc-primary)
+  cisco.aci.aci_l3out_logical_interface_vpc_member:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    tenant: "{{ item.tenant }}"
+    l3out: "{{ item.l3out }}"
+    node_profile: "{{ item.node_profile }}"
+    interface_profile: "{{ item.interface_profile }}"
+    pod_id: "{{ item.pod_id }}"
+    node_id: "{{ item.node_id }}"
+    path_ep: "{{ item.path_ep}}"
+    side: "{{ item.side }}"
+    address: "{{ item.address }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_l3ext_rspathl3outatt_vpcport }}"
+  when: item.priority == 'primary'
+  tags:
+    - l3extMember
+ 
+# Add or Remove Logical Interface
+- name: Add/Remove l3extIp (vpc-secondary)
+  cisco.aci.aci_l3out_interface_secondary_ip: 
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    tenant: "{{ item.tenant }}"
+    l3out: "{{ item.l3out }}"
+    node_profile: "{{ item.node_profile }}"
+    interface_profile: "{{ item.interface_profile }}"
+    pod_id: "{{ item.pod_id }}"
+    node_id: "{{ item.node_id }}"
+    path_ep: "{{ item.path_ep}}"
+    side: "{{ item.side }}"
+    address: "{{ item.address }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_l3ext_rspathl3outatt_vpcport }}"
+  when: item.priority == 'secondary'
+  tags:
+    - l3extIp
+
+# Add or Remove Static Route
+- name: Add/Remove l3extIpRouteP
+  cisco.aci.aci_l3out_static_routes:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    tenant: "{{ item.tenant }}"
+    l3out: "{{ item.l3out }}"
+    logical_node: "{{ item.node_profile}}"
+    node_id: "{{ item.node_id }}"
+    pod_id: "{{ item.pod_id }}"
+    prefix: "{{ item.prefix }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_l3ext_iproutep }}"
+
+# Add or Remove Static Route Nexthop.
+- name: Add/Remove ipNexthopP
+  cisco.aci.aci_l3out_static_routes_nexthop:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    tenant: "{{ item.tenant }}"
+    l3out: "{{ item.l3out }}"
+    node_profile: "{{ item.node_profile}}"
+    pod_id: "{{ item.pod_id }}"
+    node_id: "{{ item.node_id }}" 
+    prefix: "{{ item.prefix }}"
+    nexthop: "{{ item.nexthop }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost 
+  loop: "{{ aci_ip_nexthopp }}"
+
+# Add or Remove External EPG
+- name: Add/Remove l3extInstP
+  cisco.aci.aci_l3out_extepg:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    tenant: "{{ item.tenant }}"
+    l3out: "{{ item.l3out }}"
+    name: "{{ item.name }}"
+    description: "{{ item.description | default('') }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_l3ext_instp }}"
+
+# Add or Remove External EPG Subnet
+- name: Add/Remove l3extSubnet
+  cisco.aci.aci_l3out_extsubnet:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    tenant: "{{ item.tenant }}"
+    l3out: "{{ item.l3out }}"
+    extepg: "{{ item.extepg }}"
+    description: "{{ item.description | default('') }}"
+    network: "{{ item.network }}"
+    scope: "{{ item.scope | default(import-security)}}"
+    aggregate: "{{ item.aggregate | default([]) }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_l3ext_subnet }}"
+
+# Add or Remove L3out bindings to BridgeDomain
+- name: Add/Remove fvRsBDToOut
+  cisco.aci.aci_bd_to_l3out:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    bd: "{{ item.bd }}"
+    l3out: "{{ item.l3out }}"
+    tenant: "{{ item.tenant }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_fv_rsbdtoout }}"

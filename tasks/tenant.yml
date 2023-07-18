@@ -13,6 +13,8 @@
     state: "{{ item.state }}"
   delegate_to: localhost
   loop: "{{ aci_fv_tenant }}"
+  tags:
+    - fvTenant
 
 # Add or Remove VRF.
 - name: Add/Remove fvCtx
@@ -29,6 +31,8 @@
     state: "{{ item.state }}"
   delegate_to: localhost
   loop: "{{ aci_fv_ctx }}"
+  tags:
+    - fvCtx
 
 # Add or Remove Bridge Domain.
 - name: Add/Remove fvBD
@@ -49,6 +53,8 @@
     state: "{{ item.state }}"
   delegate_to: localhost
   loop: "{{ aci_fv_bd }}"
+  tags: 
+    - fvBD
 
 # Add or Remove BD Subnets.
 - name: Add/Remove fvSubnet
@@ -68,6 +74,8 @@
   delegate_to: localhost
   when: item.route_profile_l3_out is undefined
   loop: "{{ aci_fv_subnet }}"
+  tags:
+    - fvSubnet
 
 # Add or Remove Application Profile.
 - name: Add/Remove fvAP.
@@ -83,6 +91,8 @@
     state: "{{ item.state }}"
   delegate_to: localhost
   loop: "{{ aci_fv_ap }}"
+  tags:
+    - fvAp
 
 # Add or Remove Application EPG.
 - name: Add/Remove fvAEPg.
@@ -103,6 +113,8 @@
     state: "{{ item.state }}"
   delegate_to: localhost
   loop: "{{ aci_fv_aepg }}"
+  tags:
+    - fvAEPg
 
 # Add or Remove Static Bindings to EPG.
 - name: Add/Remove fvRsPathAtt
@@ -123,9 +135,11 @@
     state: "{{ item.state }}"
   delegate_to: localhost
   loop: "{{ aci_fv_rspathatt }}"
+  tags:
+    - fvRsPathAtt
 
 # Add or Remove contracts.
-- name: Add/Remove BrCP
+- name: Add/Remove brCP
   cisco.aci.aci_contract:
     host: "{{ aci_apic_address }}"
     username: "{{ aci_apic_username }}"
@@ -139,6 +153,8 @@
     state: "{{ item.state }}"
   delegate_to: localhost
   loop: "{{ aci_br_cp }}"
+  tags:
+    - brCP
 
 # Add or Remove contract subjects.
 - name: Add/Remove vzSubJ
@@ -159,6 +175,8 @@
   delegate_to: localhost
   when: item.apply_both_direction
   loop: "{{ aci_vz_subj }}"
+  tags:
+    - vzSubJ
 
 # Add or Remove one-way contract subjects.
 - name: Add/Remove vzSubJ one-way
@@ -179,6 +197,8 @@
   delegate_to: localhost
   when: not item.apply_both_direction
   loop: "{{ aci_vz_subj }}"
+  tags:
+    - vzSubJ
 
 
 # Add or Remove Filter
@@ -192,6 +212,8 @@
     tenant: "{{ item.tenant }}"
   delegate_to: localhost
   loop: "{{ aci_vz_filter }}"
+  tags:
+    - vzFilter
 
 # Add or Remove Filter entry
 - name: Add/Remove vzEntry
@@ -214,6 +236,8 @@
     state: "{{ item.state }}" 
   delegate_to: localhost
   loop: "{{ aci_vz_entry }}"
+  tags:
+    - vzEntry
 
 # Add or Remove Subject to filter bindings.
 - name: Add/Remove vzRsSubjFiltAtt
@@ -229,6 +253,8 @@
     direction: "{{ item.direction }}"
   delegate_to: localhost
   loop: "{{ aci_vz_rssubjfiltatt }}"
+  tags:
+    - vzRsSubjFiltAtt
 
  
     

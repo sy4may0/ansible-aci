@@ -81,6 +81,18 @@ aci_infra_accportgrp:
     lldp_policy: LLDPPOL-HIRAGI
     port_channel_policy: LACPPOL-HIRAGI-ACTIVE
     state: present
+  - name: APG-HIRAGI-VPC-L3OUT
+    lag_type: node
+    aep: AEP-KAGAMI
+    description: 'VPC Port'
+    link_level_policy: LLPOL-HIRAGI-DEFAULT
+    cdp_policy: CDPPOL-HIRAGI
+    lldp_policy: LLDPPOL-HIRAGI
+    port_channel_policy: LACPPOL-HIRAGI-ACTIVE
+    state: present
  
+ 
+
+
  
 

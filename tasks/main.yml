@@ -1,9 +1,16 @@
 ---
 # tasks file for aci.
 #- name: Import tasks of fabric configure.
-#  ansible.builtin.import_tasks:
+#  ansible.builtin.include_tasks:
 #    file: fabric.yml
-
-- name: Import tasks of tenant configure.
-  ansible.builtin.import_tasks:
-    file: tenant.yml
+#  tags: never
+#
+#- name: Import tasks of tenant configure.
+#  ansible.builtin.include_tasks:
+#    file: tenant.yml
+#  tags: never
+#
+#- name: Import tasks of l3out configure.
+#  ansible.builtin.include_tasks:
+#    file: l3out.yml
+#  tags: always

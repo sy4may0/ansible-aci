@@ -44,4 +44,11 @@ aci_fv_subnet:
     description: soujirou
     scope: [private, shared]
     state: present
-    
+  - name: SOUJIROU-EXT
+    bd: KANATA-BD
+    tenant: KANATA
+    gateway: 10.0.101.5
+    mask: 30
+    description: soujirou
+    scope: [public]
+    state: present

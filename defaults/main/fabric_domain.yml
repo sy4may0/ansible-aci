@@ -32,4 +32,9 @@ aci_infra_rsvlanns:
     pool: VP-HIRAGI
     pool_allocation_mode: static
     state: present
+  - domain: L3D-TSUKASA
+    domain_type: l3dom
+    pool: VP-HIRAGI-L3OUT
+    pool_allocation_mode: static
+    state: present
 

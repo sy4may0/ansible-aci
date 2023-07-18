@@ -1,0 +1,14 @@
+# Add or Remove Tenants.
+- name: Add/Remove fvTenant.
+  cisco.aci.aci_tenant:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    tenant: Ansible_Test
+    description: "Ansible_Test"
+    state: present
+  delegate_to: localhost
+  tags:
+    - fvTenant
+

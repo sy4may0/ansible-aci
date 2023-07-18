@@ -9,6 +9,10 @@ aci_fvns_vlaninstp:
     pool_allocation_mode: static
     description: HIRAGI
     state: present
+  - name: VP-HIRAGI-L3OUT
+    pool_allocation_mode: static
+    description: HIRAGI-L3OUT
+    state: present
 
 # VLAN Pool Encap Block Configure.
 # - pool: Parent VLAN Pool name.
@@ -32,5 +36,20 @@ aci_fvns_encapblk:
     pool_allocation_mode: static
     block_start: 3991
     block_end: 3993
+    state: present
+  - pool: VP-HIRAGI-L3OUT
+    pool_allocation_mode: static
+    block_start: 3491
+    block_end: 3493
+    state: present
+  - pool: VP-HIRAGI-L3OUT
+    pool_allocation_mode: static
+    block_start: 3581
+    block_end: 3583
+    state: present
+  - pool: VP-HIRAGI-L3OUT
+    pool_allocation_mode: static
+    block_start: 3591
+    block_end: 3593
     state: present
 
