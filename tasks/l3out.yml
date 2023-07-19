@@ -93,7 +93,7 @@
     address: "{{ item.address }}"
     state: "{{ item.state }}"
   delegate_to: localhost
-  loop: "{{ aci_l3ext_rspathl3outatt_l3port }}"
+  loop: "{{ aci_l3ext_rspathl3outatt }}"
   when: item.interface_type != 'ext-svi'
   tags:
     - l3extRsPathL3OutAtt
@@ -114,7 +114,7 @@
     interface_type: "{{ item.interface_type }}"
     state: "{{ item.state }}"
   delegate_to: localhost
-  loop: "{{ aci_l3ext_rspathl3outatt_l3port }}"
+  loop: "{{ aci_l3ext_rspathl3outatt }}"
   when: item.interface_type == 'ext-svi'
   tags:
     - l3extRsPathL3OutAtt
@@ -227,7 +227,7 @@
     extepg: "{{ item.extepg }}"
     description: "{{ item.description | default('') }}"
     network: "{{ item.network }}"
-    scope: "{{ item.scope | default(import-security)}}"
+    scope: "{{ item.scope | default('import-security')}}"
     aggregate: "{{ item.aggregate | default([]) }}"
     state: "{{ item.state }}"
   delegate_to: localhost

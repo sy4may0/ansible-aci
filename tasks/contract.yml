@@ -1,0 +1,193 @@
+---
+# Add or Remove contracts.
+- name: Add/Remove brCP
+  cisco.aci.aci_contract:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    name: "{{ item.name }}"
+    tenant: "{{ item.tenant }}"
+    description: "{{ item.description | default('')}}"
+    dscp: "{{ item.dscp | default('unspecified') }}"
+    priority: "{{ item.priority | default('unspecified')}}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_br_cp }}"
+  tags:
+    - brCP
+
+# Add or Remove contract subjects.
+- name: Add/Remove vzSubJ
+  cisco.aci.aci_contract_subject:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    subject: "{{ item.name }}"
+    tenant: "{{ item.tenant }}"
+    apply_both_direction: both
+    reverse_filter: "{{ item.reverse_filter | default(true) }}"
+    contract: "{{ item.contract }}"
+    description: "{{ item.description | default('')}}"
+    dscp: "{{ item.dscp | default('unspecified') }}"
+    priority: "{{ item.priority | default('unspecified')}}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  when: item.apply_both_direction
+  loop: "{{ aci_vz_subj }}"
+  tags:
+    - vzSubJ
+
+# Add or Remove one-way contract subjects.
+- name: Add/Remove vzSubJ one-way
+  cisco.aci.aci_contract_subject:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    subject: "{{ item.name }}"
+    tenant: "{{ item.tenant }}"
+    apply_both_direction: one-way
+    reverse_filter: false
+    contract: "{{ item.contract }}"
+    description: "{{ item.description | default('')}}"
+    dscp: "{{ item.dscp | default('unspecified') }}"
+    priority: "{{ item.priority | default('unspecified')}}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  when: not item.apply_both_direction
+  loop: "{{ aci_vz_subj }}"
+  tags:
+    - vzSubJ
+
+
+# Add or Remove Filter
+- name: Add/Remove vzFilter
+  cisco.aci.aci_filter:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    filter: "{{ item.name }}"
+    tenant: "{{ item.tenant }}"
+  delegate_to: localhost
+  loop: "{{ aci_vz_filter }}"
+  tags:
+    - vzFilter
+
+# Add or Remove Filter entry
+- name: Add/Remove vzEntry
+  cisco.aci.aci_filter_entry:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    entry: "{{ item.name }}"
+    filter: "{{ item.filter }}"
+    tenant: "{{ item.tenant }}"
+    ether_type: "{{ item.ether_type | default('unspecified') }}"
+    ip_protocol: "{{ item.ip_protocol | default('unspecified') }}"
+    dst_port_start: "{{ item.dst_port_start | default('unspecified') }}"
+    dst_port_end: "{{ item.dst_port_end | default('unspecified') }}"
+    icmp_msg_type: "{{ item.icmp_msg_type | default('unspecified') }}"
+    icmp6_msg_type: "{{ item.icmp6_msg_type | default('unspecified') }}"
+    arp_flag: "{{ item.arp_flag | default('unspecified') }}"
+    stateful: "{{ item.stateful | default(false) }}"
+    state: "{{ item.state }}" 
+  delegate_to: localhost
+  loop: "{{ aci_vz_entry }}"
+  tags:
+    - vzEntry
+
+# Add or Remove Subject to filter bindings.
+- name: Add/Remove vzRsSubjFiltAtt
+  cisco.aci.aci_contract_subject_to_filter:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    subject: "{{ item.subject }}"
+    filter: "{{ item.filter }}"
+    tenant: "{{ item.tenant }}"
+    contract: "{{ item.contract }}"
+    direction: "{{ item.direction }}"
+  delegate_to: localhost
+  loop: "{{ aci_vz_rssubjfiltatt }}"
+  tags:
+    - vzRsSubjFiltAtt
+
+# Add or Remove Contract interface (export).
+- name: Add/Remove vzCPIf
+  cisco.aci.aci_contract_export:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    name: "{{ item.name }}"
+    destination_tenant: "{{ item.dest_tenant }}"
+    tenant: "{{ item.tenant }}"
+    contract: "{{ item.contract }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_vz_cpif }}"
+  tags:
+    - vzCPIf
+
+# Add or Remove Epg connect to Contract
+- name: Add/Remove fvRsProv, fvRsConv
+  cisco.aci.aci_epg_to_contract:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    tenant: "{{ item.tenant }}"
+    ap: "{{ item.ap }}"
+    epg: "{{ item.epg }}"
+    contract: "{{ item.contract }}"
+    contract_type: "{{ item.contract_type }}"
+    contract_label: "{{ item.contract_label | default('') }}"
+    subject_label: "{{ item.subject_label | default('') }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_fv_rsprov_rsconv }}"
+  tags:
+    - fvRsProv
+    - fvRsConv
+
+# Add or Remove EPG connect to Contract Interface
+- name: Add/Remove fvRsConsIf
+  cisco.aci.aci_epg_to_contract_interface:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    tenant: "{{ item.tenant }}"
+    ap: "{{ item.ap }}"
+    epg: "{{ item.epg }}"
+    contract_interface: "{{ item.contract_if }}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_fv_rsconsif }}"
+  tags:
+    - fvRsConsIf
+
+# Add or Remove ExtEPG connect to Contract
+- name: Add/Remove fvRsConv, fvRsProv with extepg
+  cisco.aci.aci_l3out_extepg_to_contract:
+    host: "{{ aci_apic_address }}"
+    username: "{{ aci_apic_username }}"
+    password: "{{ aci_apic_password }}"
+    validate_certs: "{{ aci_apic_validate_certs }}"
+    tenant: "{{ item.tenant }}"
+    l3out: "{{ item.l3out }}"
+    extepg: "{{ item.extepg }}"
+    contract: "{{ item.contract }}"
+    contract_type: "{{ item.contract_type | default('provider')}}"
+    state: "{{ item.state }}"
+  delegate_to: localhost
+  loop: "{{ aci_fv_rsprov_rsconv_extepg }}"
+  tags:
+    - fvRsConv
+    - fvRsProv
+

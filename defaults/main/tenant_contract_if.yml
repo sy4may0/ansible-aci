@@ -1,0 +1,35 @@
+---
+aci_vz_cpif:
+  - name: KANATA_CP2common
+    dest_tenant: common
+    tenant: KANATA
+    contract: KANATA_CP
+    state: present
+
+aci_fv_rsprov_rsconv:
+  - tenant: KANATA
+    ap: KONATA
+    epg: KONATA-APP
+    contract: KANATA_CP
+    contract_type: provider
+    contract_label: 'KANATA_CP'
+    subject_label: 'KANATA_CP_SUB'
+    state: present
+  - tenant: KANATA
+    ap: KONATA
+    epg: KONATA-WEB
+    contract: KANATA_CP
+    contract_type: consumer
+    contract_label: 'KANATA_CP'
+    subject_label: 'KANATA_CP_SUB'
+    state: present
+  
+aci_fv_rsconsif: []
+
+aci_fv_rsprov_rsconv_extepg:
+- tenant: KANATA
+  l3out: KANATA-L3OUT
+  extepg: KANATA-EXT-EPG
+  contract: KANATA_CP
+  contract_type: provider
+  state: present
