@@ -1,0 +1,50 @@
+---
+# Consume or Provide EPG to Contract configure.
+# - tenant: Tenant name.
+#   ap: AP name.
+#   epg: EPG name.
+#   contract: Contract name.
+#   contract_type: Contract type.(provider|consumer)
+#   contract_label: Contract label to match.
+#   subject_label: Contract Subject label to match.
+#   state: State of Contract conection.(present|absent)
+aci_fv_rsprov_rsconv:
+  - tenant: KANATA
+    ap: KONATA
+    epg: KONATA-APP
+    contract: KANATA_CP
+    contract_type: provider
+    contract_label: 'KANATA_CP'
+    subject_label: 'KANATA_CP_SUB'
+    state: present
+  - tenant: KANATA
+    ap: KONATA
+    epg: KONATA-WEB
+    contract: KANATA_CP
+    contract_type: consumer
+    contract_label: 'KANATA_CP'
+    subject_label: 'KANATA_CP_SUB'
+    state: present
+
+# Consume EPG to Contract Interface configure.
+# - tenant: Tenant name.
+#   ap: AP name.
+#   epg: EPG name.
+#   contract_if: Contract Interface name.
+#   state: State of Contract conection.(present|absent)
+aci_fv_rsconsif: []
+
+# Consume or Provide External EPG to Contract configure.
+# - tenant: Tenant name.
+#   l3out: L3Out name.
+#   extepg: External EPG name.
+#   contract: Contract name.
+#   contract_type: Contract type.(provider|consumer)
+#   state: State of Contract conection.(present|absent)
+aci_fv_rsprov_rsconv_extepg:
+- tenant: KANATA
+  l3out: KANATA-L3OUT
+  extepg: KANATA-EXT-EPG
+  contract: KANATA_CP
+  contract_type: provider
+  state: present

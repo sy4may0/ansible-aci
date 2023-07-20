@@ -1,0 +1,61 @@
+# Contract filter configure.
+# - name: Filter name.
+#   tenant: Tenant name.
+aci_vz_filter:
+  - name: KANATA_FILTER_ICMP
+    tenant: KANATA
+  - name: KANATA_FILTER_HTTP
+    tenant: KANATA
+
+# Contract filter entry configure.
+# - name: Entry name. 
+#   filter: Filter name.
+#   tenant: Tenant name.
+#   arp_flag: ARP flag. Defaults to 'unspecified'.
+#       (arp_replay|arp_request|unspecified)
+#   ether_type: Ether type. Defaults to 'unspecified'.
+#       (arp|fcoe|ip|ipv4|ipv6|mac_security|mpls_ucast|trill|unspecified)
+#   ip_protocol: IP Protocol. Defaults to 'unspecified'.
+#       (eigrp|egp|icmp|icmpv6|igmp|igp|l2tp|ospfigp|pim|tcp|udp|unspecified)
+#   dst_port_start: Destination port start number. Defaults to 'unspecified'.
+#   dst_port_end: Destination port end number. Defaults to 'unspecified'.
+#   icmp_msg_type: ICMP message type. Defaults to 'unspecified'.
+#       (dst_unreachable|echo_request|echo_reply|neighbor_advertisement)
+#       (neighbor_solicitation|redirect|time_exceeded|unpecified)
+#   icmp6_msg_type: ICMPv6 message type. Defaults to 'unspecified'.
+#       (dst_unreachable|echo|echo_reply|src_quench)
+#       (time_exceeded|unpecified)
+#   statefull: Allow statefull. Defaults to false.
+#   stateful: true
+#   state: present
+aci_vz_entry:
+  - name: icmpv4
+    filter: KANATA_FILTER_ICMP
+    tenant: KANATA
+    ether_type: ipv4
+    ip_protocol: icmp
+    state: present
+  - name: icmpv6
+    filter: KANATA_FILTER_ICMP
+    tenant: KANATA
+    ether_type: ipv6
+    ip_protocol: icmpv6
+    state: present
+  - name: http
+    filter: KANATA_FILTER_HTTP
+    tenant: KANATA
+    ether_type: ip
+    ip_protocol: tcp
+    dst_port_start: 80
+    dst_port_end: 80
+    stateful: true
+    state: present
+  - name: https
+    filter: KANATA_FILTER_HTTP
+    tenant: KANATA
+    ether_type: ip
+    ip_protocol: tcp
+    dst_port_start: 443
+    dst_port_end: 443
+    stateful: true
+    state: present

@@ -1,0 +1,28 @@
+---
+# L3Out configure.
+# - name: L3Out name. 
+#   tenant: Tenant name.
+#   vrf: VRF name.
+#   domain: L3 Domain name.
+#   description: Description. Defaults to ''.
+#   l3protocol: Routing protocol.(bgp|eigrp|ospf|pim|static)
+#   state: State of the L3Out(present|absent)
+aci_l3ext_out:
+  - name: KANATA-L3OUT
+    tenant: KANATA
+    vrf: KANATA-VRF
+    domain: L3D-TSUKASA
+    description: 'L3out'
+    l3protocol: static
+    state: present
+
+# Binding Bridge domain to L3Out configure.
+# - tenant: Tenant name.
+#   bd: Bridge Domain name.
+#   l3out: L3Out name.
+#   state: State of the Binding.(present|absent)
+aci_fv_rsbdtoout:
+  - tenant: KANATA
+    bd: KANATA-BD
+    l3out: KANATA-L3OUT
+    state: present

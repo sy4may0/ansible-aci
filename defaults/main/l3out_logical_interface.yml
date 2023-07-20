@@ -1,32 +1,10 @@
 ---
-# L3Out configure.
-aci_l3ext_out:
-  - name: KANATA-L3OUT
-    tenant: KANATA
-    vrf: KANATA-VRF
-    domain: L3D-TSUKASA
-    description: 'L3out'
-    l3protocol: static
-    state: present
-
-# Logical Node Profile configure.
-aci_l3ext_lnodep:
-  - name: KANATA-L3OUT-LNP
-    l3out: KANATA-L3OUT
-    tenant: KANATA
-    state: present
-
-# Logical Node configure.
-aci_l3ext_rsnodel3outatt:
-  - tenant: KANATA
-    l3out: KANATA-L3OUT
-    node_profile: KANATA-L3OUT-LNP
-    pod_id: 1
-    node_id: 101
-    router_id: 10.0.200.201
-    state: present
-
 # Logical Interface Profile configure.
+# - name: Logical Interface Profile name.
+#   l3out: L3Out name. 
+#   tenant: Tenant name.
+#   node_profile: Logical Node Profile name.
+#   state: State of the Logical Interface Profile.(present|absent)
 aci_l3ext_lifp:
   - name: KANATA-L3OUT-LIFP
     l3out: KANATA-L3OUT
@@ -39,6 +17,19 @@ aci_l3ext_lifp:
     node_profile: KANATA-L3OUT-LNP
     state: present
  
+# Logical Interface Configure
+# - tenant: Tenant name.
+#   l3out: L3Out name.
+#   node_profile: Logical Node Profile name.
+#   interface_profile: Logical Interface Profile name.
+#   pod_id: Pod id.
+#   node_id: Node id.
+#   path_ep: Path to interface. 
+#       Port number (eth1/12) or Interface Policy Group for PC and VPC. 
+#   address: IP Address.
+#   interface_type: Interface type.(l3port|sub-interface|ext-svi)
+#   encap: Vlan ID.(vlan-xxx) 
+#   state: state of Logical Interface Configure.
 aci_l3ext_rspathl3outatt:
   - tenant: KANATA
     l3out: KANATA-L3OUT
@@ -62,7 +53,18 @@ aci_l3ext_rspathl3outatt:
     encap: vlan-800
     state: present
 
-
+# Logical Interface VPC port configure.
+# - tenant: Tenant name.
+#   l3out: L3out name.
+#   node_profile: Logical Node Profile name.
+#   interface_profile: Interface Profile name.
+#   pod_id: Pod id.
+#   node_id: Node id.
+#   path_ep: VPC Interface Policy Group.
+#   side: Interface side.(A|B)
+#   address: IP Address.
+#   priority: Interface priority.(primary|secondary)
+#   state: State of the Logical Interface.(present|absent)
 aci_l3ext_rspathl3outatt_vpcport:
   - tenant: KANATA
     l3out: KANATA-L3OUT
@@ -108,46 +110,3 @@ aci_l3ext_rspathl3outatt_vpcport:
     address: 10.0.101.104/24
     state: present
     priority: secondary
-
-aci_l3ext_iproutep:
-  - tenant: KANATA
-    l3out: KANATA-L3OUT
-    node_profile: KANATA-L3OUT-LNP
-    node_id: 101
-    pod_id: 1
-    prefix: 10.1.0.0/16
-    state: present
-
-aci_ip_nexthopp:
-  - tenant: KANATA
-    l3out: KANATA-L3OUT
-    node_profile: KANATA-L3OUT-LNP
-    pod_id: 1
-    node_id: 101
-    prefix: 10.1.0.0/16
-    nexthop: 10.0.101.110
-    state: present
-
-aci_l3ext_instp:
-  - tenant: KANATA
-    l3out: KANATA-L3OUT
-    name: KANATA-EXT-EPG
-    description: kanaextepg
-    state: present
-
-aci_l3ext_subnet:
-  - tenant: KANATA
-    l3out: KANATA-L3OUT
-    extepg: KANATA-EXT-EPG
-    description: kanaextepgsubnet
-    network: 0.0.0.0/0
-    scope:
-      - import-security
-    aggrigate: []
-    state: present
-
-aci_fv_rsbdtoout:
-  - tenant: KANATA
-    bd: KANATA-BD
-    l3out: KANATA-L3OUT
-    state: present

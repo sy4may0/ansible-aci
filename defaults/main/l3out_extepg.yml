@@ -1,0 +1,38 @@
+---
+# L3Out External EPG configure.
+# - tenant: Tenant name.
+#   l3out: L3Out name. 
+#   name: External EPG name.
+#   description: Description. defaults to ''.
+#   state: State of the External EPG.(present|absent)
+aci_l3ext_instp:
+  - tenant: KANATA
+    l3out: KANATA-L3OUT
+    name: KANATA-EXT-EPG
+    description: kanaextepg
+    state: present
+
+# L3Out External EPG Subnet configure.
+# - tenant: Tenant name.
+#   l3out: L3Out name.
+#   extepg: External EPG name.
+#   description: Description. Defaults to ''.
+#   network: Subnet Network like 'xxx.xxx.xxx.xxx/xx'
+#   scope: Determines the scope of the subnet. parameter list.
+#       (export-rtctrl|import-rtctrl)
+#       (import-security|shared-rtctrl|shared-security)
+#       Defaults to ['import-security']
+#   aggrigate: Determines the Aggrigate Routes.
+#       (export-rtctrl|import-rtctrl|shared-rtctrl) 
+#       Defaults to []
+#   state: State of the External EPG Subnet.(present|absent)
+aci_l3ext_subnet:
+  - tenant: KANATA
+    l3out: KANATA-L3OUT
+    extepg: KANATA-EXT-EPG
+    description: kanaextepgsubnet
+    network: 0.0.0.0/0
+    scope:
+      - import-security
+    aggrigate: []
+    state: present

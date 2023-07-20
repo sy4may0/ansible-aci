@@ -1,0 +1,36 @@
+---
+# L3Out Static Route configure.
+# - tenant: Tenant name.
+#   l3out: L3Out name. 
+#   node_profile: Logical Node Profile name.
+#   node_id: Node id.
+#   pod_id: Pod id.
+#   prefix: Prefix like 'xxx.xxx.xxx.0/24'.(Routed outside network) 
+#   state: State of the Static route.(present|absent)
+aci_l3ext_iproutep:
+  - tenant: KANATA
+    l3out: KANATA-L3OUT
+    node_profile: KANATA-L3OUT-LNP
+    node_id: 101
+    pod_id: 1
+    prefix: 10.1.0.0/16
+    state: present
+
+# L3Out Static Route Nexthop configure.
+# - tenant: Tenant name.
+#   l3out: L3Out name.
+#   node_profile: Logical Node Profile name.
+#   pod_id: Pod ID.
+#   node_id: Node ID.
+#   prefix: Prefix like 'xxx.xxx.xxx.0/24'.(Routed outside network) 
+#   nexthop: Nexthop Address.(xxx.xxx.xxx.xxx)
+#   state: State of Static Route Nexthop.(present|absent)
+aci_ip_nexthopp:
+  - tenant: KANATA
+    l3out: KANATA-L3OUT
+    node_profile: KANATA-L3OUT-LNP
+    pod_id: 1
+    node_id: 101
+    prefix: 10.1.0.0/16
+    nexthop: 10.0.101.110
+    state: present

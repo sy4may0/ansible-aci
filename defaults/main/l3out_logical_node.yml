@@ -1,0 +1,28 @@
+---
+# Logical Node Profile configure.
+# - name: Logical Node Profile name.
+#   l3out: L3Out name.
+#   tenant: Tenant name.
+#   state: State of the Logical Node Profile(present|absent)
+aci_l3ext_lnodep:
+  - name: KANATA-L3OUT-LNP
+    l3out: KANATA-L3OUT
+    tenant: KANATA
+    state: present
+
+# Logical Node configure.
+# - tenant: Tenant name.
+#   l3out: L3Out name. 
+#   node_profile: Logical Node Profile name.
+#   pod_id: Pod ID.
+#   node_id: Node ID. 
+#   router_id: Router ID like 'xxx.xxx.xxx.xxx' 
+#   state: State of the Logical Node.(present|absent)
+aci_l3ext_rsnodel3outatt:
+  - tenant: KANATA
+    l3out: KANATA-L3OUT
+    node_profile: KANATA-L3OUT-LNP
+    pod_id: 1
+    node_id: 101
+    router_id: 10.0.200.201
+    state: present
