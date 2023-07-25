@@ -7,3 +7,4 @@ aci_fabric_lenodepgrp:
   - name: SPG-HIRAGI
     monitoring_policy: default
     inventory_policy: default
+    state: present

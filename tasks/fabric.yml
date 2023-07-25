@@ -293,6 +293,7 @@
     switch_type: leaf
     monitoring_policy: "{{ item.monitoring_policy | default('default') }}"
     inventory_policy: "{{ item.inventory_policy | default('default') }}"
+    state: "{{ item.state }}"
   delegate_to: localhost
   loop: "{{ aci_fabric_lenodepgrp }}"
 

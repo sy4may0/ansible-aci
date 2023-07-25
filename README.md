@@ -1,38 +1,48 @@
-Role Name
+ACI
 =========
 
-A brief description of the role goes here.
+ACIのファブリック及びテナント設定を行います。
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+None.
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+変数のデフォルト値はdefaultsディレクトリを確認してください。必要に応じて、パラメーターをデフォルト値から変更する場合、group_vars等、他の変数定義ファイルを作成し値を上書きしてください。
+
+変数の詳細な説明は以下のページを確認してください。
+- [接続設定](documents/Variables.md)
+- [ACIファブリック設定](documents/Variables_Fabric.md)
+- [テナント設定](documents/Variables_Tenant.md)
+- [L3Out設定](documents/Variables_L3Out.md)
+- [コントラクト設定](documents/Variables_Fabric.md)
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+None.
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+ローカルから実行するため、`become: no`及び`gather_facts: no`を設定します。
+```
+- hosts: apic
+  become: no
+  gather_facts: no
+  roles:
+    - aci
+```
 
 License
 -------
 
-BSD
+MIT
 
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+This role was created in 2023 by [sy4may0](https://github.com/sy4may0).
